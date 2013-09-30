@@ -1,5 +1,7 @@
 This is an implementation of a few multi-armed bandit algorithms in Scala. See [Sifter](http://www.sifter.cc) for more info.
 
+I am very open to pull requests with new algorithms (I'm working on more) and especially idiomatic code changes (I'm still learning scala).
+
 ## Setup
 
     git clone git@github.com:alaiacano/sifter-lib.git
