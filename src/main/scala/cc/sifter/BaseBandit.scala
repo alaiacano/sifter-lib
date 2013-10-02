@@ -1,13 +1,11 @@
 package cc.sifter
 
-import cc.sifter.Arm
 import java.util.Random
-
 
 abstract class BaseBandit(arms : Seq[Arm]) {
 
   protected val rand = new Random()
-  protected def armCount = arms.size
+  protected lazy val armCount = arms.size
 
   /**
    * Method to choose which arm will be returned to the user.
@@ -50,5 +48,7 @@ abstract class BaseBandit(arms : Seq[Arm]) {
     }
     arms(maxIndex)
   }
+
+  protected def totalValue : Double = arms.map(i=>i.getValue).sum
 
 }
