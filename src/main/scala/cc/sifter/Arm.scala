@@ -9,9 +9,13 @@ package cc.sifter
  */
 
 object Arm {
+  private val serializationDelim = ","
+
   def apply(id : String) = new Arm(id, 0, 0, 0.0)
 
-  def apply(id : String, pullCount : Int, requestCount : Int, value : Double) = new Arm(id, pullCount, requestCount, value)
+  def apply(id : String, pullCount : Int, requestCount : Int, value : Double) = new Arm(id.replace(serializationDelim, ""), pullCount, requestCount, value)
+
+  def checkIdFormat(id : String) : Boolean = !id.contains(serializationDelim)
 }
 
 class Arm(private val id : String, private var pullCount : Int, private var requestCount : Int, private var value : Double) {
@@ -30,4 +34,8 @@ class Arm(private val id : String, private var pullCount : Int, private var requ
   def getValue = value
   def getId = id
   def getRequestCount = requestCount
+
+  override def toString() = {
+    Seq[String](id, pullCount.toString, requestCount.toString, value.toString).mkString(",")
+  }
 }

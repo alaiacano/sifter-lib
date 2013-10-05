@@ -14,7 +14,7 @@ abstract class BaseEpsilonGreedy(arms : Seq[Arm]) extends BaseBandit(arms) {
     }
   }
 
-  def recordSuccess(arm : Arm, value : Double = 1.0) : Boolean = {
+  protected def recordSuccess(arm : Arm, value : Double = 1.0) : Boolean = {
     try {
       arm.incrementValue(value)
       true
@@ -24,7 +24,7 @@ abstract class BaseEpsilonGreedy(arms : Seq[Arm]) extends BaseBandit(arms) {
     }
   }
 
-  def recordFailure(arm : Arm, value : Double = 1.0) : Boolean = {
+  protected def recordFailure(arm : Arm, value : Double = 1.0) : Boolean = {
     try {
       arm.decrementValue(value)
       true

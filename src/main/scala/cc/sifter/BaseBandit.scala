@@ -21,18 +21,20 @@ abstract class BaseBandit(arms : Seq[Arm]) {
     arm
   }
 
+  // TODO: docs
   def success(arm : Arm, value : Double) : Boolean = {
     arm.incrementPullCount
     recordSuccess(arm, value)
   }
-  
+
+  // TODO: docs  
   def failure(arm : Arm, value : Double) : Boolean = {
     arm.incrementPullCount
     recordFailure(arm, value)
   }
 
-  protected def recordSuccess(arm : Arm, value : Double) : Boolean
-  protected def recordFailure(arm : Arm, value : Double) : Boolean
+  protected def recordSuccess(arm : Arm, value : Double = 1.0) : Boolean
+  protected def recordFailure(arm : Arm, value : Double = 1.0) : Boolean
 
   def printInfo() {
     println("Arms:   " + arms.map(i=>i.getId).mkString(", "))
@@ -50,5 +52,19 @@ abstract class BaseBandit(arms : Seq[Arm]) {
   }
 
   protected def totalValue : Double = arms.map(i=>i.getValue).sum
+
+  // TODO: docs
+  def categoricalDraw(probs : Seq[Double]) : Int = {
+    val z = rand.nextDouble()
+    var cumProb = 0.0
+    val loop = (0 to probs.size).toIterator
+    var i = 0
+    while (cumProb < z ) {
+      i = loop.next
+      cumProb += probs(i)
+    }
+    i
+  }
+
 
 }
