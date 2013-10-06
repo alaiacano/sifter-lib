@@ -16,7 +16,7 @@ import java.util.Random
 
 val rand = new Random(1)
 
-val Npulls = 10000
+val Npulls = 10
 
 val epsilon = 0.5
 val test = EpsilonGreedy(Seq(Arm("one"), Arm("two"), Arm("three")), epsilon)
@@ -30,10 +30,10 @@ for (i <- 1 to Npulls) {
   }
 
   if (rand.nextDouble < prob) {
-      test.success(arm, 1.0)
+      test.update(arm, 1.0)
   }
   else {
-      test.failure(arm, 1.0)
+      test.update(arm, -1.0)
   }
 }
 

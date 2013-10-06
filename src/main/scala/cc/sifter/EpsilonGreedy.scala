@@ -23,7 +23,6 @@ abstract class BaseEpsilonGreedy(arms : Seq[Arm]) extends BaseBandit(arms) {
       case _ => false
     }
   }
-
 }
 
 

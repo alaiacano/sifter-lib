@@ -27,7 +27,7 @@ abstract class BaseBandit(arms : Seq[Arm]) {
     updateAlgorithm(arm, value)
   }
 
-  protected def updateAlgorithm(arm : Arm, value : Double = 1.0) : Boolean
+  protected def updateAlgorithm(arm : Arm, value : Double) : Boolean
 
   def printInfo() {
     println("Arms:   " + arms.map(i=>i.getId).mkString(", "))

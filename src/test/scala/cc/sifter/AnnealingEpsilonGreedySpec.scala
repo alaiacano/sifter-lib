@@ -22,10 +22,10 @@ class AnnealingEpsilonGreedySpec extends FlatSpec {
       }
 
       if (rand.nextDouble < prob) {
-          test.success(arm, 1.0)
+          test.update(arm, 1.0)
       }
       else {
-          test.failure(arm, 1.0)
+          test.update(arm, -1.0)
       }
     }
 

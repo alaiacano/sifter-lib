@@ -29,10 +29,14 @@ object SoftMax {
   def apply(arms : Seq[Arm], temperature : Double) = new SoftMax(arms, temperature)
 }
 
-class SoftMax(arms : Seq[Arm], temperature : Double) extends BaseSoftMax(arms) {
+class SoftMax(val arms : Seq[Arm], val temperature : Double) extends BaseSoftMax(arms) {
   override def getTemperature : Double = temperature
 }
 
-class AnnealingSoftMax(arms : Seq[Arm]) extends BaseSoftMax(arms) {
+object AnnealingSoftMax {
+  def apply(arms : Seq[Arm]) = new AnnealingSoftMax(arms)
+}
+
+class AnnealingSoftMax(val arms : Seq[Arm]) extends BaseSoftMax(arms) {
   override def getTemperature : Double = 1.0 / math.log(0.0000001 + arms.map(a=>a.getPullCount).sum)
 }

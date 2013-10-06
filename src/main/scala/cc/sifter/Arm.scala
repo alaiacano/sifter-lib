@@ -27,8 +27,7 @@ class Arm(private val id : String, private var pullCount : Int, private var requ
   def decrementRequestCount() { requestCount -= 1 }
 
   def setValue(v : Double)       { value = v }
-  def incrementValue(v : Double) { value += math.abs(v) }
-  def decrementValue(v : Double) { value -= math.abs(v) }
+  def incrementValue(v : Double) { value += v }
 
   def getPullCount = pullCount
   def getValue = value

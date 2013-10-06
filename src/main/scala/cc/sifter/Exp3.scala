@@ -17,7 +17,6 @@ class Exp3(val arms : Seq[Arm], val gamma : Double) extends BaseBandit(arms) {
     val probs = arms.map(i => (1.0 - gamma) * (i.getValue / totalValue) + gamma / armCount)
     arms(categoricalDraw(probs))
   }
-
   
   private def calculateGrowthFactor(value : Double) = math.exp(((1 - gamma) * value / totalValue) * gamma / arms.size)
 
