@@ -22,19 +22,12 @@ abstract class BaseBandit(arms : Seq[Arm]) {
   }
 
   // TODO: docs
-  def success(arm : Arm, value : Double) : Boolean = {
+  def update(arm : Arm, value : Double) : Boolean = {
     arm.incrementPullCount
-    recordSuccess(arm, value)
+    updateAlgorithm(arm, value)
   }
 
-  // TODO: docs  
-  def failure(arm : Arm, value : Double) : Boolean = {
-    arm.incrementPullCount
-    recordFailure(arm, value)
-  }
-
-  protected def recordSuccess(arm : Arm, value : Double = 1.0) : Boolean
-  protected def recordFailure(arm : Arm, value : Double = 1.0) : Boolean
+  protected def updateAlgorithm(arm : Arm, value : Double = 1.0) : Boolean
 
   def printInfo() {
     println("Arms:   " + arms.map(i=>i.getId).mkString(", "))

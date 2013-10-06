@@ -14,19 +14,9 @@ abstract class BaseEpsilonGreedy(arms : Seq[Arm]) extends BaseBandit(arms) {
     }
   }
 
-  protected def recordSuccess(arm : Arm, value : Double = 1.0) : Boolean = {
+  protected def updateAlgorithm(arm : Arm, value : Double) : Boolean = {
     try {
       arm.incrementValue(value)
-      true
-    }
-    catch {
-      case _ => false
-    }
-  }
-
-  protected def recordFailure(arm : Arm, value : Double = 1.0) : Boolean = {
-    try {
-      arm.decrementValue(value)
       true
     }
     catch {
@@ -50,12 +40,12 @@ class AnnealingEpsilonGreedy(val arms : Seq[Arm]) extends BaseEpsilonGreedy(arms
   }
 }
 
+
 object EpsilonGreedy {
   def apply(arms: Seq[Arm], eps : Double) = {
     new EpsilonGreedy(arms, eps)
   }
 }
-
 
 class EpsilonGreedy(val arms : Seq[Arm], epsilon : Double) extends BaseEpsilonGreedy(arms) {
   override def calculateEpsilon() : Double = epsilon

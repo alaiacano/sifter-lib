@@ -21,21 +21,9 @@ class Exp3(val arms : Seq[Arm], val gamma : Double) extends BaseBandit(arms) {
   
   private def calculateGrowthFactor(value : Double) = math.exp(((1 - gamma) * value / totalValue) * gamma / arms.size)
 
-  protected def recordSuccess(arm : Arm, value : Double) : Boolean = {
+  protected def updateAlgorithm(arm : Arm, value : Double) : Boolean = {
     try {
-      val v = math.abs(value)
-      arm.setValue(arm.getValue * calculateGrowthFactor(v))
-      true
-    }
-    catch {
-      case _ => false
-    }
-  }
-
-  protected def recordFailure(arm : Arm, value : Double) : Boolean = {
-    try {
-      val v = -1 * math.abs(value)
-      arm.setValue(arm.getValue * calculateGrowthFactor(v))
+      arm.setValue(arm.getValue * calculateGrowthFactor(value))
       true
     }
     catch {
