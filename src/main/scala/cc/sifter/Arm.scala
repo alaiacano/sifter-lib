@@ -8,6 +8,9 @@ package cc.sifter
  * To change this template use File | Settings | File Templates.
  */
 
+
+case class Selection(val id : String, var value : Double = 0.0)
+
 object Arm {
   private val serializationDelim = ","
 

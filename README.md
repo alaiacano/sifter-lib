@@ -10,36 +10,40 @@ I am very open to pull requests with new algorithms (I'm working on more) and es
 
 ## Example usage.
 
+Here's a simulation that's run 1000 times. There are three different options ("arms"):
+`one`, `two`, and `three`, and we run 1000 experiments ("pulls"). Our simulation will
+return a value of 1.0 with a probability of 0.2, 0.4, and 0.8 for the respective arms.
+
 ```scala
 import cc.sifter._
 import java.util.Random
 
 val rand = new Random(1)
 
-val Npulls = 10
+val Npulls = 1000
 
+// initialize an EpsilonGreedy test
 val epsilon = 0.5
 val test = EpsilonGreedy(Seq(Arm("one"), Arm("two"), Arm("three")), epsilon)
 
-for (i <- 1 to Npulls) {
-  val arm = test.selectArm()
-  val prob = arm.getId match {
-    case "one"   => .2
-    case "two"   => .4
-    case "three" => .8
-  }
+val conversionProbabilities = Map("one" -> .2, "two" -> .4, "three" -> .8)
 
-  if (rand.nextDouble < prob) {
-      test.update(arm, 1.0)
-  }
-  else {
-      test.update(arm, -1.0)
-  }
+for (i <- 1 to Npulls) {
+
+  // select an arm for this experiment
+  val selection : Selection = test.selectArm()
+
+  // simulate the test and assign a value.
+  val successfulConversion = rand.nextDouble < conversionProbabilities(selection.id)
+  selection.value = if (successfulConversion) 1.0 else 0.0
+
+  // update the test with the result.
+  test.update(selection)
 }
 
 test.printInfo
 
 // Arms:   one, two, three
-// Pulls:  1726, 1676, 6598
-// Values: -1028.0, -310.0, 3890.0
+// Pulls:  178, 170, 652
+// Values: 44.0, 70.0, 513.0
 ```

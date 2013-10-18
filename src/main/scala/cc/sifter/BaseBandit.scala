@@ -4,9 +4,11 @@ import java.util.Random
 
 abstract class BaseBandit(arms : Seq[Arm]) {
 
-  protected val rand = new Random()
-  protected lazy val armCount = arms.size
-
+  lazy val rand = new Random()
+  lazy val armCount = arms.size
+  protected val armIndexFromId = Map[String, Int]((0 until armCount).map(i => arms(i).getId -> i):_*)
+  protected def isValidId(id: String) : Boolean = armIndexFromId.keySet.contains(id)
+  
   /**
    * Method to choose which arm will be returned to the user.
    */
@@ -15,16 +17,18 @@ abstract class BaseBandit(arms : Seq[Arm]) {
   /**
    * User-facing method for selecting the next arm to use.
    */
-  def selectArm() : Arm = {
+  def selectArm() : Selection = {
     val arm = chooseArm()
     arm.incrementRequestCount()
-    arm
+    Selection(arm.getId)
   }
 
-  // TODO: docs
-  def update(arm : Arm, value : Double) : Boolean = {
+  // TODO: docs!
+  def update(selection : Selection) : Boolean = {
+    require( isValidId(selection.id) )
+    var arm : Arm = arms(armIndexFromId(selection.id))
     arm.incrementPullCount
-    updateAlgorithm(arm, value)
+    updateAlgorithm(arm, selection.value)
   }
 
   protected def updateAlgorithm(arm : Arm, value : Double) : Boolean

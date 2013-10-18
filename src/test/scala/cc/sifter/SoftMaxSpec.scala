@@ -15,19 +15,15 @@ class SoftMaxSpec extends FlatSpec {
     val test = SoftMax(Seq(Arm("one"), Arm("two"), Arm("three")), temperature)
     
     for (i <- 1 to Npulls) {
-      val arm = test.selectArm()
-      val prob = arm.getId match {
+      val selection = test.selectArm()
+      val prob = selection.id match {
         case "one"   => .2
         case "two"   => .4
-        case "three" => .8
+        case "three" => .8   // this should be the highest
       }
 
-      if (rand.nextDouble < prob) {
-          test.update(arm, 1.0)
-      }
-      else {
-          test.update(arm, -1.0)
-      }
+      selection.value = if (rand.nextDouble < prob) 1.0 else 0.0
+      test.update(selection)
     }
 
     test.arms(2).getPullCount should be > (test.arms(0).getPullCount)
