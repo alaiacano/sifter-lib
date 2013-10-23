@@ -21,21 +21,26 @@ object Arm {
   def checkIdFormat(id: String): Boolean = !id.contains(serializationDelim)
 }
 
-class Arm(private val id: String, private var pullCount: Int, private var requestCount: Int, private var value: Double) {
+class Arm(id: String, pullCount: Int, requestCount: Int, value: Double) {
 
-  def incrementPullCount() { pullCount += 1 }
-  def decrementPullCount() { pullCount -= 1 }
+  private val _id = id
+  private var _pullCount = pullCount
+  private var _requestCount = requestCount
+  private var _value = value
 
-  def incrementRequestCount() { requestCount += 1 }
-  def decrementRequestCount() { requestCount -= 1 }
+  def incrementPullCount() { _pullCount += 1 }
+  def decrementPullCount() { _pullCount -= 1 }
 
-  def setValue(v: Double)       { value = v }
-  def incrementValue(v: Double) { value += v }
+  def incrementRequestCount() { _requestCount += 1 }
+  def decrementRequestCount() { _requestCount -= 1 }
 
-  def getPullCount = pullCount
-  def getValue = value
-  def getId = id
-  def getRequestCount = requestCount
+  def value_=(v: Double)        { _value = v }
+  def incrementValue(v: Double) { value = value + v }
+
+  def pullCount = _pullCount
+  def value = _value
+  def id = _id
+  def requestCount = _requestCount
 
   override def toString() = {
     Seq[String](id, pullCount.toString, requestCount.toString, value.toString).mkString(",")

@@ -36,19 +36,19 @@ abstract class BaseBandit(arms: Seq[Arm]) {
   def printInfo() {
     println("Arms:   " + arms.map(i=>i.getId).mkString(", "))
     println("Pulls:  " + arms.map(i=>i.getPullCount.toString).mkString(", "))
-    println("Values: " + arms.map(i=>i.getValue.toString).mkString(", "))
+    println("Values: " + arms.map(i=>i.value.toString).mkString(", "))
   }
 
   protected def getMaxArm: Arm = {
-    var maxValue = arms(0).getValue
+    var maxValue = arms(0).value
     var maxIndex = 0
     for (i <- 1 until armCount) {
-      if (arms(i).getValue > maxValue) { maxIndex = i; maxValue = arms(i).getValue }
+      if (arms(i).value > maxValue) { maxIndex = i; maxValue = arms(i).value }
     }
     arms(maxIndex)
   }
 
-  protected def totalValue: Double = arms.map(i=>i.getValue).sum
+  protected def totalValue: Double = arms.map(i=>i.value).sum
 
   // TODO: docs
   def categoricalDraw(probs: Seq[Double]): Int = {
