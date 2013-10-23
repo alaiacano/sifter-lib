@@ -11,16 +11,16 @@ object Exp3 {
   }
 }
 
-class Exp3(val arms : Seq[Arm], val gamma : Double) extends BaseBandit(arms) {
+class Exp3(val arms: Seq[Arm], val gamma: Double) extends BaseBandit(arms) {
 
-  protected def chooseArm() : Arm = {
+  protected def chooseArm(): Arm = {
     val probs = arms.map(i => (1.0 - gamma) * (i.getValue / totalValue) + gamma / armCount)
     arms(categoricalDraw(probs))
   }
   
-  private def calculateGrowthFactor(value : Double) = math.exp(((1 - gamma) * value / totalValue) * gamma / arms.size)
+  private def calculateGrowthFactor(value: Double) = math.exp(((1 - gamma) * value / totalValue) * gamma / arms.size)
 
-  protected def updateAlgorithm(arm : Arm, value : Double) : Boolean = {
+  protected def updateAlgorithm(arm: Arm, value: Double): Boolean = {
     try {
       arm.setValue(arm.getValue * calculateGrowthFactor(value))
       true
