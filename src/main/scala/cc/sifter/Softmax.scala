@@ -2,12 +2,12 @@ package cc.sifter
 
 abstract class BaseSoftMax(arms: Seq[Arm]) extends BaseBandit(arms) {
 
-  override protected def totalValue: Double = arms.map(i => math.exp(i.value/ getTemperature)).sum
+  def temperature: Double
 
-  def getTemperature: Double
+  override protected def totalValue: Double = arms.map(i => math.exp(i.value/ temperature)).sum
 
   def chooseArm(): Arm = {
-    val probs = arms.map(a => math.exp(a.value / getTemperature) / totalValue) 
+    val probs = arms.map(a => math.exp(a.value / temperature) / totalValue) 
     arms(categoricalDraw(probs))
   }
 
@@ -25,18 +25,10 @@ abstract class BaseSoftMax(arms: Seq[Arm]) extends BaseBandit(arms) {
 }
 
 
-object SoftMax {
-  def apply(arms: Seq[Arm], temperature: Double) = new SoftMax(arms, temperature)
+case class SoftMax(val arms: Seq[Arm], temp: Double) extends BaseSoftMax(arms) {
+  override def temperature: Double = temp
 }
 
-class SoftMax(val arms: Seq[Arm], val temperature: Double) extends BaseSoftMax(arms) {
-  override def getTemperature: Double = temperature
-}
-
-object AnnealingSoftMax {
-  def apply(arms: Seq[Arm]) = new AnnealingSoftMax(arms)
-}
-
-class AnnealingSoftMax(val arms: Seq[Arm]) extends BaseSoftMax(arms) {
-  override def getTemperature: Double = 1.0 / math.log(0.0000001 + arms.map(a=>a.pullCount).sum)
+case class AnnealingSoftMax(val arms: Seq[Arm]) extends BaseSoftMax(arms) {
+  override def temperature: Double = 1.0 / math.log(0.0000001 + arms.map(a=>a.pullCount).sum)
 }

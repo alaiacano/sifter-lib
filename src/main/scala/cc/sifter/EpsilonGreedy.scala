@@ -2,10 +2,9 @@ package cc.sifter
 
 abstract class BaseEpsilonGreedy(arms: Seq[Arm]) extends BaseBandit(arms) {
 
-  def calculateEpsilon(): Double
+  def epsilon: Double
 
   def chooseArm(): Arm = {
-    val epsilon = calculateEpsilon()
     if (rand.nextDouble() < epsilon) {
       getMaxArm
     }
@@ -26,26 +25,14 @@ abstract class BaseEpsilonGreedy(arms: Seq[Arm]) extends BaseBandit(arms) {
 }
 
 
-object AnnealingEpsilonGreedy {
-  def apply(arms: Seq[Arm]) = {
-    new AnnealingEpsilonGreedy(arms)
-  }
-}
-
-class AnnealingEpsilonGreedy(val arms: Seq[Arm]) extends BaseEpsilonGreedy(arms) {
-  def calculateEpsilon(): Double = {
+case class AnnealingEpsilonGreedy(val arms: Seq[Arm]) extends BaseEpsilonGreedy(arms) {
+  def epsilon: Double = {
     val totalTests: Double = arms.map(arm => arm.pullCount).sum + 1
     1 / math.log(totalTests + 0.0000001)
   }
 }
 
 
-object EpsilonGreedy {
-  def apply(arms: Seq[Arm], eps: Double) = {
-    new EpsilonGreedy(arms, eps)
-  }
-}
-
-class EpsilonGreedy(val arms: Seq[Arm], epsilon: Double) extends BaseEpsilonGreedy(arms) {
-  override def calculateEpsilon(): Double = epsilon
+case class EpsilonGreedy(val arms: Seq[Arm], eps: Double) extends BaseEpsilonGreedy(arms) {
+  override def epsilon: Double = eps
 }

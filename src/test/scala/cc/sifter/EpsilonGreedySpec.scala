@@ -11,7 +11,7 @@ class EpsilonGreedySpec extends FlatSpec {
   "An EpsilonGreedy algorithm" should "produce the right steady state output" in {
       
     val Npulls = 10000
-    val epsilon = 0.5
+    val epsilon = 0.8
     val test = EpsilonGreedy(Seq(Arm("one"), Arm("two"), Arm("three")), epsilon)
     
     for (i <- 1 to Npulls) {
