@@ -31,7 +31,7 @@ val conversionProbabilities = Map("one" -> .2, "two" -> .4, "three" -> .8)
 for (i <- 1 to Npulls) {
 
   // select an arm for this experiment
-  val selection : Selection = test.selectArm()
+  val selection: Selection = test.selectArm()
 
   // simulate the test and assign a value.
   val successfulConversion = rand.nextDouble < conversionProbabilities(selection.id)
