@@ -25,11 +25,11 @@ class AnnealingEpsilonGreedySpec extends FlatSpec {
       test.update(selection)
     }
 
-    test.arms(2).getPullCount should be > (test.arms(0).getPullCount)
-    test.arms(2).getPullCount should be > (test.arms(1).getPullCount)
+    test.arms(2).pullCount should be > (test.arms(0).pullCount)
+    test.arms(2).pullCount should be > (test.arms(1).pullCount)
 
-    test.arms(2).getValue should be > (test.arms(0).getValue)
-    test.arms(2).getValue should be > (test.arms(1).getValue)
-    test.arms(1).getValue should be > (test.arms(0).getValue)
+    test.arms(2).value should be > (test.arms(0).value)
+    test.arms(2).value should be > (test.arms(1).value)
+    test.arms(1).value should be > (test.arms(0).value)
   }
 }

@@ -2,11 +2,11 @@ package cc.sifter
 
 object Exp3 {
   def apply(arms: Seq[Arm], gamma: Double) = {
-    arms.map( i => i.setValue(1.0) )
+    arms.map( i => i.value = 1.0 )
     new Exp3(arms, gamma)
   }
   def apply(arms: Seq[Arm]) = {
-    arms.map( i => i.setValue(1.0) )
+    arms.map( i => i.value = 1.0 )
     new Exp3(arms, .5)
   }
 }

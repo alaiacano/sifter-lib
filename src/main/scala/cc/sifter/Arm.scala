@@ -21,12 +21,12 @@ object Arm {
   def checkIdFormat(id: String): Boolean = !id.contains(serializationDelim)
 }
 
-class Arm(id: String, pullCount: Int, requestCount: Int, value: Double) {
+class Arm(armId: String, initPullCount: Int, initRequestCount: Int, initValue: Double) {
 
-  private val _id = id
-  private var _pullCount = pullCount
-  private var _requestCount = requestCount
-  private var _value = value
+  private val _id = armId
+  private var _pullCount = initPullCount
+  private var _requestCount = initRequestCount
+  private var _value = initValue
 
   def incrementPullCount() { _pullCount += 1 }
   def decrementPullCount() { _pullCount -= 1 }

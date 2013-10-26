@@ -34,7 +34,7 @@ object AnnealingEpsilonGreedy {
 
 class AnnealingEpsilonGreedy(val arms: Seq[Arm]) extends BaseEpsilonGreedy(arms) {
   def calculateEpsilon(): Double = {
-    val totalTests: Double = arms.map(arm => arm.getPullCount).sum + 1
+    val totalTests: Double = arms.map(arm => arm.pullCount).sum + 1
     1 / math.log(totalTests + 0.0000001)
   }
 }
