@@ -8,6 +8,10 @@ I am very open to pull requests with new algorithms (I'm working on more) and es
     cd sifter-lib
     sbt assembly
 
+You can also fork this repo and use [this method](http://stackoverflow.com/a/8828803) to pull the 
+code directly into your sbt project (I wouldn't recommend using my repo as a dependency
+as I'm still activiely committing to it and the API isn't guaranteed to be stable yet).
+
 ## Example usage.
 
 Here's a simulation that's run 1000 times. There are three different options ("arms"):
