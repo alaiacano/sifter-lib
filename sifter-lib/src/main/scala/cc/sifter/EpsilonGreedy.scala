@@ -1,37 +1,39 @@
 package cc.sifter
 
-import scala.util.Try
-
-trait BaseEpsilonGreedy extends BaseBandit {
+trait BaseEpsilonGreedy extends Bandit {
 
   def epsilon: Double
 
   def chooseArm(): Arm = {
     if (rand.nextDouble() < epsilon) {
-      getMaxArm
+      maxArm
     }
     else {
-      arms(rand.nextInt(armCount))
+      armsMap.values.toIndexedSeq(rand.nextInt(armsMap.size))
     }
-  }
-
-  protected def updateAlgorithm(arm: Arm, value: Double): Option[Boolean] = {
-    Try{
-      arm.incrementValue(value)
-      true
-    }.toOption
   }
 }
 
 
-case class AnnealingEpsilonGreedy(arms: Seq[Arm]) extends BaseEpsilonGreedy {
+case class AnnealingEpsilonGreedy(arms: Seq[Arm]) extends Bandit with BaseEpsilonGreedy{
   def epsilon: Double = {
     val totalTests: Double = arms.map(arm => arm.pullCount).sum + 1
     1 / math.log(totalTests + 0.0000001)
   }
+
+  def updateAlgorithm(arm: Arm, value: Double): AnnealingEpsilonGreedy = {
+    val updatedArm = arm.copy(value = value + arm.value)
+    val newArms = arms.map(a => if (a.id == updatedArm.id) updatedArm else a)
+    this.copy(arms=newArms)
+  }
 }
 
-
 case class EpsilonGreedy(arms: Seq[Arm], eps: Double) extends BaseEpsilonGreedy {
-  override def epsilon: Double = eps
+  val epsilon: Double = eps
+
+  def updateAlgorithm(arm: Arm, value: Double): EpsilonGreedy = {
+    val updatedArm = arm.copy(value = value + arm.value)
+    val newArms = arms.map(a => if (a.id == updatedArm.id) updatedArm else a)
+    this.copy(arms = newArms)
+  }
 }

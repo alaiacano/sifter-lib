@@ -9,8 +9,8 @@ class EpsilonGreedySpec extends FlatSpec with Matchers {
   "An EpsilonGreedy algorithm" should "produce the right steady state output" in {
       
     val Npulls = 10000
-    val epsilon = 0.8
-    val test = EpsilonGreedy(Seq(Arm("one"), Arm("two"), Arm("three")), epsilon)
+    val epsilon = 0.2  // very safe value
+    var test: Bandit = EpsilonGreedy(Seq(Arm("one"), Arm("two"), Arm("three")), epsilon)
     
     for (i <- 1 to Npulls) {
       val selection: Selection = test.selectArm()
@@ -20,7 +20,8 @@ class EpsilonGreedySpec extends FlatSpec with Matchers {
         case "three" => .8   // this should be the highest
       }
       val randVal = rand.nextDouble
-      test.update(selection.copy(value = if (randVal < prob) 1.0 else 0.0))
+      val updatedSelection = selection.copy(value = if (randVal < prob) 1.0 else 0.0)
+      test = test.update(updatedSelection)
     }
 
     test.arms(2).pullCount should be > test.arms(0).pullCount

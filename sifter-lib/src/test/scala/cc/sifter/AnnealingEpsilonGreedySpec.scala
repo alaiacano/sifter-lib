@@ -10,7 +10,7 @@ class AnnealingEpsilonGreedySpec extends FlatSpec with Matchers {
   "An AnnealingEpsilonGreedy algorithm" should "produce the right steady state output" in {
       
     val Npulls = 10000
-    val test = AnnealingEpsilonGreedy(Seq(Arm("one"), Arm("two"), Arm("three")))
+    var test: Bandit = AnnealingEpsilonGreedy(Seq(Arm("one"), Arm("two"), Arm("three")))
     
     for (i <- 1 to Npulls) {
       val selection = test.selectArm()
@@ -21,7 +21,7 @@ class AnnealingEpsilonGreedySpec extends FlatSpec with Matchers {
       }
 
 
-      test.update(selection.copy(value = if (rand.nextDouble < prob) 1.0 else 0.0))
+      test = test.update(selection.copy(value = if (rand.nextDouble < prob) 1.0 else 0.0))
     }
 
     test.arms(2).pullCount should be > (test.arms(0).pullCount)

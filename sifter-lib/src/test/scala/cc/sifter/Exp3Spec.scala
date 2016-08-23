@@ -11,7 +11,7 @@ class Exp3Spec extends FlatSpec with Matchers {
       
     val Npulls = 10000
     val epsilon = 0.5
-    val test = Exp3(Seq(Arm("one"), Arm("two"), Arm("three")))
+    var test: Bandit = Exp3(Seq(Arm("one"), Arm("two"), Arm("three")))
     
     for (i <- 1 to Npulls) {
       val selection = test.selectArm()
@@ -20,8 +20,8 @@ class Exp3Spec extends FlatSpec with Matchers {
         case "two"   => .4
         case "three" => .8   // this should be the highest
       }
-
-      test.update(selection.copy(value = if (rand.nextDouble < prob) 1.0 else 0.0))
+      val updatedSelection = selection.copy(value = if (rand.nextDouble < prob) 1.0 else 0.0)
+      test = test.update(updatedSelection)
     }
 
     test.arms(2).pullCount should be > (test.arms(0).pullCount)
