@@ -1,18 +1,17 @@
 package cc.sifter
 
 import org.scalatest._
-import org.scalatest.matchers.ShouldMatchers._
 
 import java.util.Random
 
-class EpsilonGreedySpec extends FlatSpec {
+class AnnealingSoftMaxSpec extends FlatSpec with Matchers {
   val rand = new Random(1)
   
-  "An EpsilonGreedy algorithm" should "produce the right steady state output" in {
+  "An AnnealingSoftMax algorithm" should "produce the right steady state output" in {
       
     val Npulls = 10000
-    val epsilon = 0.8
-    val test = EpsilonGreedy(Seq(Arm("one"), Arm("two"), Arm("three")), epsilon)
+    val epsilon = 0.5
+    val test = AnnealingSoftMax(Seq(Arm("one"), Arm("two"), Arm("three")))
     
     for (i <- 1 to Npulls) {
       val selection = test.selectArm()
@@ -22,8 +21,7 @@ class EpsilonGreedySpec extends FlatSpec {
         case "three" => .8   // this should be the highest
       }
 
-      selection.value = if (rand.nextDouble < prob) 1.0 else 0.0
-      test.update(selection)
+      test.update(selection.copy(value = if (rand.nextDouble < prob) 1.0 else 0.0))
     }
 
     test.arms(2).pullCount should be > (test.arms(0).pullCount)

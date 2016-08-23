@@ -1,6 +1,8 @@
 package cc.sifter
 
-abstract class BaseEpsilonGreedy(arms: Seq[Arm]) extends BaseBandit(arms) {
+import scala.util.Try
+
+trait BaseEpsilonGreedy extends BaseBandit {
 
   def epsilon: Double
 
@@ -13,19 +15,16 @@ abstract class BaseEpsilonGreedy(arms: Seq[Arm]) extends BaseBandit(arms) {
     }
   }
 
-  protected def updateAlgorithm(arm: Arm, value: Double): Boolean = {
-    try {
+  protected def updateAlgorithm(arm: Arm, value: Double): Option[Boolean] = {
+    Try{
       arm.incrementValue(value)
       true
-    }
-    catch {
-      case _ => false
-    }
+    }.toOption
   }
 }
 
 
-case class AnnealingEpsilonGreedy(val arms: Seq[Arm]) extends BaseEpsilonGreedy(arms) {
+case class AnnealingEpsilonGreedy(arms: Seq[Arm]) extends BaseEpsilonGreedy {
   def epsilon: Double = {
     val totalTests: Double = arms.map(arm => arm.pullCount).sum + 1
     1 / math.log(totalTests + 0.0000001)
@@ -33,6 +32,6 @@ case class AnnealingEpsilonGreedy(val arms: Seq[Arm]) extends BaseEpsilonGreedy(
 }
 
 
-case class EpsilonGreedy(val arms: Seq[Arm], eps: Double) extends BaseEpsilonGreedy(arms) {
+case class EpsilonGreedy(arms: Seq[Arm], eps: Double) extends BaseEpsilonGreedy {
   override def epsilon: Double = eps
 }

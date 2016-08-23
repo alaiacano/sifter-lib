@@ -1,1 +1,2 @@
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.9.0")
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")
+addCompilerPlugin("org.psywerx.hairyfotr" %% "linter" % "0.1.14")
