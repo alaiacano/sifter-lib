@@ -2,8 +2,9 @@ package cc.sifter
 
 import java.util.Random
 
-abstract class BaseBandit(arms: Seq[Arm]) {
+trait BaseBandit {
 
+  val arms: Seq[Arm]
   lazy val rand = new Random()
   lazy val armCount = arms.size
   protected val armIndexFromId = Map[String, Int]((0 until armCount).map(i => arms(i).id -> i):_*)
@@ -24,14 +25,14 @@ abstract class BaseBandit(arms: Seq[Arm]) {
   }
 
   // TODO: docs!
-  def update(selection: Selection): Boolean = {
+  def update(selection: Selection): Option[Boolean] = {
     require( isValidId(selection.id) )
-    var arm: Arm = arms(armIndexFromId(selection.id))
-    arm.incrementPullCount
+    val arm: Arm = arms(armIndexFromId(selection.id))
+    arm.incrementPullCount()
     updateAlgorithm(arm, selection.value)
   }
 
-  protected def updateAlgorithm(arm: Arm, value: Double): Boolean
+  protected def updateAlgorithm(arm: Arm, value: Double): Option[Boolean]
 
   def printInfo() {
     println("Arms:   " + arms.map(i=>i.id).mkString(", "))

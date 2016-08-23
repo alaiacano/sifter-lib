@@ -1,11 +1,10 @@
 package cc.sifter
 
 import org.scalatest._
-import org.scalatest.matchers.ShouldMatchers._
 
 import java.util.Random
 
-class Exp3Spec extends FlatSpec {
+class Exp3Spec extends FlatSpec with Matchers {
   val rand = new Random(1)
   
   "An Exp3 algorithm" should "produce the right steady state output" in {
@@ -22,8 +21,7 @@ class Exp3Spec extends FlatSpec {
         case "three" => .8   // this should be the highest
       }
 
-      selection.value = if (rand.nextDouble < prob) 1.0 else 0.0
-      test.update(selection)
+      test.update(selection.copy(value = if (rand.nextDouble < prob) 1.0 else 0.0))
     }
 
     test.arms(2).pullCount should be > (test.arms(0).pullCount)
