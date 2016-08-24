@@ -25,13 +25,11 @@ trait Bandit {
   }
 
   def update(selection: Selection): Bandit = {
-    armsMap
-      .get(selection.id)
-      .map(_.incrementPullCount())
-      .map(arm => updateAlgorithm(arm, selection.value))
-      .getOrElse {
-        throw new Exception(s"Unknown arm: ${selection.id}")
-      }
+    val updatedArm: Arm = armsMap
+      .getOrElse(selection.id, throw new Exception(s"Unknown arm: ${selection.id}"))
+      .incrementPullCount()
+
+    updateAlgorithm(updatedArm, selection.value)
   }
 
   protected def updateAlgorithm(arm: Arm, value: Double): Bandit
