@@ -6,7 +6,7 @@ import scala.collection.mutable.{Map => MMap}
 trait Bandit {
 
   /**
-    * This is the mutable state for the bandit. Which is only sort of used.
+    * This is the mutable state for the bandit.
     */
   val armsMap: MMap[String, Arm]
   def arm(id: String): Option[Arm] = armsMap.get(id)
