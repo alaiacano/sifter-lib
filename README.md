@@ -14,7 +14,7 @@ import cc.sifter._
 import java.util.Random
 
 val nPulls = 10000
-val epsilon = 0.2  // very safe value
+val epsilon = 0.2  // 20% of the time, use the best performer
 val mabTest = EpsilonGreedy(Seq(Arm("one"), Arm("two"), Arm("three")), epsilon)
 val rand = new Random(1)
 
