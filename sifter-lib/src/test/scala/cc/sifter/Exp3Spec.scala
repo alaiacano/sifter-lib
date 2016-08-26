@@ -10,7 +10,6 @@ class Exp3Spec extends FlatSpec with Matchers {
   "An Exp3 algorithm" should "produce the right steady state output" in {
       
     val Npulls = 10000
-    val epsilon = 0.5
     val test = Exp3(Seq(Arm("one"), Arm("two"), Arm("three")))
     
     for (i <- 1 to Npulls) {
