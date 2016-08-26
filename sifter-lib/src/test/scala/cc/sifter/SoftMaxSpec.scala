@@ -11,7 +11,7 @@ class SoftMaxSpec extends FlatSpec with Matchers {
       
     val Npulls = 10000
     val temperature = 0.5
-    var test: Bandit = SoftMax(Seq(Arm("one"), Arm("two"), Arm("three")), temperature)
+    val test = SoftMax(Seq(Arm("one"), Arm("two"), Arm("three")), temperature)
     
     for (i <- 1 to Npulls) {
       val selection = test.selectArm()
@@ -21,14 +21,14 @@ class SoftMaxSpec extends FlatSpec with Matchers {
         case "three" => .8   // this should be the highest
       }
 
-      test = test.update(selection.copy(value = if (rand.nextDouble < prob) 1.0 else 0.0))
+      test.update(selection.copy(value = if (rand.nextDouble < prob) 1.0 else 0.0))
     }
 
-    test.arms(2).pullCount should be > (test.arms(0).pullCount)
-    test.arms(2).pullCount should be > (test.arms(1).pullCount)
+    test.arm("three").map(_.pullCount) should be > test.arm("one").map(_.pullCount)
+    test.arm("three").map(_.pullCount) should be > test.arm("two").map(_.pullCount)
 
-    test.arms(2).value should be > (test.arms(0).value)
-    test.arms(2).value should be > (test.arms(1).value)
-    test.arms(1).value should be > (test.arms(0).value)
+    test.arm("three").map(_.value) should be > test.arm("one").map(_.value)
+    test.arm("three").map(_.value) should be > test.arm("two").map(_.value)
+    test.arm("two").map(_.value) should be > test.arm("one").map(_.value)
   }
 }

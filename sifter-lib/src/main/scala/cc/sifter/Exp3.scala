@@ -1,5 +1,7 @@
 package cc.sifter
 
+import scala.collection.mutable.{Map => MMap}
+
 object Exp3 {
 
   def apply(arms: Seq[Arm], gamma: Double): Exp3 = {
@@ -13,7 +15,8 @@ object Exp3 {
   }
 }
 
-class Exp3(val arms: Seq[Arm], val gamma: Double) extends Bandit {
+class Exp3(initArms: Seq[Arm], val gamma: Double) extends Bandit {
+  val armsMap = MMap(initArms.map(arm => arm.id -> arm):_*)
 
   protected def chooseArm(): Arm = {
     val probs = arms.map(i => (1.0 - gamma) * (i.value / totalValue) + gamma / arms.size.toDouble)
@@ -22,9 +25,8 @@ class Exp3(val arms: Seq[Arm], val gamma: Double) extends Bandit {
   
   private def calculateGrowthFactor(value: Double): Double = math.exp(((1 - gamma) * value / totalValue) * gamma / arms.size)
 
-  def updateAlgorithm(arm: Arm, value: Double): Exp3 = {
-    val updatedArm = arm.copy(value = value + arm.value)
-    val newArms = arms.map(a => if (a.id == updatedArm.id) updatedArm else a)
-    new Exp3(newArms, gamma)
+  override def updateAlgorithm(arm: Arm, value: Double) = {
+    val updatedArm = arm.copy(value = arm.value * calculateGrowthFactor(value))
+    armsMap(updatedArm.id) = updatedArm
   }
 }

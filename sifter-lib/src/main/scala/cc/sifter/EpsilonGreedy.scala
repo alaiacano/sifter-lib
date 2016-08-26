@@ -1,5 +1,7 @@
 package cc.sifter
 
+import collection.mutable.{Map => MMap}
+
 trait BaseEpsilonGreedy extends Bandit {
 
   def epsilon: Double
@@ -15,25 +17,15 @@ trait BaseEpsilonGreedy extends Bandit {
 }
 
 
-case class AnnealingEpsilonGreedy(arms: Seq[Arm]) extends Bandit with BaseEpsilonGreedy{
+case class AnnealingEpsilonGreedy(initArms: Seq[Arm]) extends Bandit with BaseEpsilonGreedy{
+  val armsMap = MMap(initArms.map(a => a.id -> a):_*)
   def epsilon: Double = {
-    val totalTests: Double = arms.map(arm => arm.pullCount).sum + 1
+    val totalTests: Double = armsMap.values.map(arm => arm.pullCount).sum + 1.0
     1 / math.log(totalTests + 0.0000001)
-  }
-
-  def updateAlgorithm(arm: Arm, value: Double): AnnealingEpsilonGreedy = {
-    val updatedArm = arm.copy(value = value + arm.value)
-    val newArms = arms.map(a => if (a.id == updatedArm.id) updatedArm else a)
-    this.copy(arms=newArms)
   }
 }
 
-case class EpsilonGreedy(arms: Seq[Arm], eps: Double) extends BaseEpsilonGreedy {
+case class EpsilonGreedy(initArms: Seq[Arm], eps: Double) extends BaseEpsilonGreedy {
+  val armsMap = MMap(initArms.map(a => a.id -> a):_*)
   val epsilon: Double = eps
-
-  def updateAlgorithm(arm: Arm, value: Double): EpsilonGreedy = {
-    val updatedArm = arm.copy(value = value + arm.value)
-    val newArms = arms.map(a => if (a.id == updatedArm.id) updatedArm else a)
-    this.copy(arms = newArms)
-  }
 }
