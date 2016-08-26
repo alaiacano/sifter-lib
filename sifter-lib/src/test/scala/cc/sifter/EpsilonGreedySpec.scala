@@ -10,7 +10,7 @@ class EpsilonGreedySpec extends FlatSpec with Matchers {
       
     val Npulls = 10000
     val epsilon = 0.2  // very safe value
-    var test: Bandit = EpsilonGreedy(Seq(Arm("one"), Arm("two"), Arm("three")), epsilon)
+    val test = EpsilonGreedy(Seq(Arm("one"), Arm("two"), Arm("three")), epsilon)
     
     for (i <- 1 to Npulls) {
       val selection: Selection = test.selectArm()
@@ -21,14 +21,14 @@ class EpsilonGreedySpec extends FlatSpec with Matchers {
       }
       val randVal = rand.nextDouble
       val updatedSelection = selection.copy(value = if (randVal < prob) 1.0 else 0.0)
-      test = test.update(updatedSelection)
+      test.update(updatedSelection)
     }
 
-    test.arms(2).pullCount should be > test.arms(0).pullCount
-    test.arms(2).pullCount should be > test.arms(1).pullCount
+    test.armsMap("three").pullCount should be > test.armsMap("one").pullCount
+    test.armsMap("three").pullCount should be > test.armsMap("two").pullCount
 
-    test.arms(2).value should be > test.arms(0).value
-    test.arms(2).value should be > test.arms(1).value
-    test.arms(1).value should be > test.arms(0).value
+    test.armsMap("three").value should be > test.armsMap("one").value
+    test.armsMap("three").value should be > test.armsMap("two").value
+    test.armsMap("two").value should be > test.armsMap("one").value
   }
 }

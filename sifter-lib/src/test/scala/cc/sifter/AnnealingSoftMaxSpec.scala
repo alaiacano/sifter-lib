@@ -10,7 +10,7 @@ class AnnealingSoftMaxSpec extends FlatSpec with Matchers {
   "An AnnealingSoftMax algorithm" should "produce the right steady state output" in {
       
     val Npulls = 10000
-    var test: Bandit = AnnealingSoftMax(Seq(Arm("one"), Arm("two"), Arm("three")))
+    val test = AnnealingSoftMax(Seq(Arm("one"), Arm("two"), Arm("three")))
     
     for (i <- 1 to Npulls) {
       val selection = test.selectArm()
@@ -20,14 +20,14 @@ class AnnealingSoftMaxSpec extends FlatSpec with Matchers {
         case "three" => .8   // this should be the highest
       }
 
-      test = test.update(selection.copy(value = if (rand.nextDouble < prob) 1.0 else 0.0))
+      test.update(selection.copy(value = if (rand.nextDouble < prob) 1.0 else 0.0))
     }
 
-    test.arms(2).pullCount should be > test.arms(0).pullCount
-    test.arms(2).pullCount should be > test.arms(1).pullCount
+    test.armsMap("three").pullCount should be > test.armsMap("one").pullCount
+    test.armsMap("three").pullCount should be > test.armsMap("two").pullCount
 
-    test.arms(2).value should be > test.arms(0).value
-    test.arms(2).value should be > test.arms(1).value
-    test.arms(1).value should be > test.arms(0).value
+    test.armsMap("three").value should be > test.armsMap("one").value
+    test.armsMap("three").value should be > test.armsMap("two").value
+    test.armsMap("two").value should be > test.armsMap("one").value
   }
 }

@@ -5,14 +5,20 @@ import scala.collection.mutable.{Map => MMap}
 
 trait Bandit {
 
-  val arms: Seq[Arm]
-  val armsMap: MMap[String, Arm] = MMap(arms.map(arm => arm.id -> arm): _*)
+  /**
+    * This is the mutable state for the bandit. Which is only sort of used.
+    */
+  val armsMap: MMap[String, Arm]
+  def arm(id: String): Option[Arm] = armsMap.get(id)
 
-  lazy val rand = new Random()
+  def arms: Seq[Arm] = armsMap.values.toSeq
+
+  val rand = new Random()
 
   /**
-   * Method to choose which arm will be returned to the user.
-   */
+    * Method to choose which [[Arm]] will be returned to the user. Each algorithm
+    * will have its own selection function.
+    */
   protected def chooseArm(): Arm
 
   /**
@@ -24,7 +30,7 @@ trait Bandit {
     Selection(arm.id)
   }
 
-  def update(selection: Selection): Bandit = {
+  def update(selection: Selection): Unit = {
     val updatedArm: Arm = armsMap
       .getOrElse(selection.id, throw new Exception(s"Unknown arm: ${selection.id}"))
       .incrementPullCount()
@@ -32,11 +38,23 @@ trait Bandit {
     updateAlgorithm(updatedArm, selection.value)
   }
 
-  protected def updateAlgorithm(arm: Arm, value: Double): Bandit
+  /**
+    * This is what needs to be extended to update the algorithm. It will likely require
+    * replacing the arm in the internal state with the one provided here and whatever else
+    * you need to do.
+    *
+    * @param arm The [[Arm]] that the user is reporting back.
+    * @param value The value that the user is reporting back.
+    * @return A new instance of a [[Bandit]].
+    */
+  protected def updateAlgorithm(arm: Arm, value: Double): Unit = {
+    val updatedArm = arm.copy(value = value + arm.value)
+    armsMap(updatedArm.id) = updatedArm
+  }
 
   def maxArm: Arm = armsMap.values.maxBy(_.value)
 
-  protected def totalValue: Double = armsMap.values.map(_.value).sum
+  def totalValue: Double = armsMap.values.map(_.value).sum
 
   def categoricalDraw(probs: Seq[Double]): Int = {
     val z = rand.nextDouble()
