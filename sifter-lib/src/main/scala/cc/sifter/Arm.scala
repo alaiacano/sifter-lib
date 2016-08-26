@@ -8,9 +8,4 @@ case class Arm(id: String, pullCount: Int = 0, requestCount: Int = 0, value: Dou
 
   def incrementRequestCount(by: Int = 1): Arm = this.copy(requestCount = requestCount + by)
 
-  def incrementValue(v: Double): Arm = this.copy(value = value + v)
-
-  override def toString() = {
-    Seq[String](id, pullCount.toString, requestCount.toString, value.toString).mkString(",")
-  }
 }
