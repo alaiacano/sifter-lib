@@ -24,11 +24,11 @@ class AnnealingEpsilonGreedySpec extends FlatSpec with Matchers {
       test.update(selection.copy(value = if (rand.nextDouble < prob) 1.0 else 0.0))
     }
 
-    test.armsMap("three").pullCount should be > test.armsMap("one").pullCount
-    test.armsMap("three").pullCount should be > test.armsMap("two").pullCount
+    test.arm("three").map(_.pullCount) should be > test.arm("one").map(_.pullCount)
+    test.arm("three").map(_.pullCount) should be > test.arm("two").map(_.pullCount)
 
-    test.armsMap("three").value should be > test.armsMap("one").value
-    test.armsMap("three").value should be > test.armsMap("two").value
-    test.armsMap("two").value should be > test.armsMap("one").value
+    test.arm("three").map(_.value) should be > test.arm("one").map(_.value)
+    test.arm("three").map(_.value) should be > test.arm("two").map(_.value)
+    test.arm("two").map(_.value) should be > test.arm("one").map(_.value)
   }
 }
